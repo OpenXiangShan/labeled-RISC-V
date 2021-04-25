@@ -396,3 +396,23 @@ class WithNL2CacheCapacity(kb: Int) extends Config((site, here, up) => {
 class WithNL2CacheWays(ways: Int) extends Config((site, here, up) => {
   case NL2CacheWays => ways
 })
+
+class WithNSSoCMemPort extends Config((site, here, up) => {
+  case ExtMem => Some(MemoryPortParams(MasterPortParams(
+                      base = x"8000_0000",
+                      size = x"1000_0000",
+                      beatBytes = 256 / 8,
+                      idBits = 7), 1))
+})
+
+class WithNSSoCMMIOPort extends Config((site, here, up) => {
+  case ExtBus => Some(MasterPortParams(
+                      base = x"1000_0000",
+                      size = x"7000_0000",
+                      beatBytes = site(MemoryBusKey).beatBytes,
+                      idBits = 1))
+})
+
+class WithNSSoCSlavePort extends Config((site, here, up) => {
+  case ExtIn  => Some(SlavePortParams(beatBytes = 256 / 8, idBits = 16, sourceBits = 3))
+})
